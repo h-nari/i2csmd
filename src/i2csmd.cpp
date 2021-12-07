@@ -78,7 +78,6 @@ void SteppingMotor::setRPM(float rpm) {
   _rpm = rpm;
   _tPeriod = 60 * 1000000 / _stepPerRot / rpm;
   _bForever = true;
-  log_i("period: %luus", _tPeriod);
 }
 
 void SteppingMotor::setPos(int32_t pos) {
@@ -155,4 +154,23 @@ void I2CSteppingMotorDriver::update(void) {
     writeReg(OLATA, bits);
     _bits = bits;
   }
+  if (_bStop && _tStop - millis() > 0x80000000) {
+    stop();
+    _bStop = false;
+  }
+}
+
+void I2CSteppingMotorDriver::start(void) {
+  _sm[0].start();
+  _sm[1].start();
+}
+
+void I2CSteppingMotorDriver::stop(void) {
+  _sm[0].stop();
+  _sm[1].stop();
+}
+
+void I2CSteppingMotorDriver::stopAfterMs(unsigned long ms) {
+  _tStop = millis() + ms;
+  _bStop = true;
 }

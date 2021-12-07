@@ -39,6 +39,8 @@ class SteppingMotor {
 class I2CSteppingMotorDriver {
  public:
   SteppingMotor _sm[2];
+  bool _bStop;
+  unsigned long _tStop;  // [ms]
 
  private:
   Adafruit_MCP23X17 _mcp;
@@ -53,4 +55,7 @@ class I2CSteppingMotorDriver {
   i2c_err_t writeReg(uint8_t addr, uint8_t data);
   void init(void);
   void update(void);
+  void start(void);
+  void stop(void);
+  void stopAfterMs(unsigned long ms);
 };
